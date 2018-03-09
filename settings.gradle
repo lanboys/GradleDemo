@@ -1,0 +1,5 @@
+rootProject.name = 'GradleDemo'
+include 'App'
+include 'Repo'
+include 'Bean'
+

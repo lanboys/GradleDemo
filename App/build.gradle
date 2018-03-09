@@ -1,0 +1,40 @@
+dependencies {
+//    implementation project(":Model")
+}
+
+//隐式 it, 内部没用引用 it 可以传参数, 或者不传，引用了必须传参数
+//定义一个创建目录的闭包
+def createDir = {
+    File dir = new File(it)
+    if (!dir.exists()) {
+        dir.mkdirs()
+    }
+}
+
+// 定义一个自动生成包的任务
+
+task makeProjectJavaPackage() {
+    def paths = ['src/main/java/com/bing/lan/task', 'src/test/java/com/bing/lan/task']
+    println "--------------------------"
+    doFirst {
+//        paths.forEach(createDir)
+        paths.forEach() { path ->
+            println path
+            File dir = new File(path)
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+        }
+    }
+    println "======================"
+
+}
+
+task makeProjectKotlinPackage() {
+    dependsOn makeProjectJavaPackage
+    def paths = ['src/main/Kotlin/com/bing/lan/task', 'src/test/Kotlin/com/bing/lan/task']
+    doLast {
+        paths.forEach(createDir)
+        paths.each(createDir)
+    }
+}
