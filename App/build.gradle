@@ -1,5 +1,7 @@
 dependencies {
-//    implementation project(":Model")
+    implementation project(":Bean")
+    implementation project(":Repo")
+    implementation project(":HelloPlugin")
 }
 
 //隐式 it, 内部没用引用 it 可以传参数, 或者不传，引用了必须传参数
@@ -13,9 +15,8 @@ def createDir = {
 
 // 定义一个自动生成包的任务
 
-task makeProjectJavaPackage() {
+task makeProjectJavaPackage {
     def paths = ['src/main/java/com/bing/lan/task', 'src/test/java/com/bing/lan/task']
-    println "--------------------------"
     doFirst {
 //        paths.forEach(createDir)
         paths.forEach() { path ->
@@ -26,15 +27,115 @@ task makeProjectJavaPackage() {
             }
         }
     }
-    println "======================"
-
 }
 
-task makeProjectKotlinPackage() {
+task("makeProjectKotlinPackage", {
     dependsOn makeProjectJavaPackage
     def paths = ['src/main/Kotlin/com/bing/lan/task', 'src/test/Kotlin/com/bing/lan/task']
     doLast {
         paths.forEach(createDir)
         paths.each(createDir)
     }
+})
+
+//http://blog.csdn.net/innost/article/details/48228651
+def copyFile = { srcFilePath, targetFilePath ->
+    try {
+        def srcFile = new File(srcFilePath)
+        def targetFile = new File(targetFilePath)
+
+        println srcFile.getAbsolutePath()
+        println targetFile.getAbsolutePath()
+
+
+        targetFile.withOutputStream { os ->
+
+            srcFile.withInputStream { ins ->
+                //利用OutputStream的<<操作符重载，完成从inputstream到OutputStream的输出
+                (os << ins)
+            }
+        }
+    } catch (Exception e) {
+
+    }
+}
+
+// 文件拷贝任务
+task copyFileTask {
+    println "----copyFileTask  start-----"
+    def paths = ['src.txt': 'taget.txt', 'src1.txt': 'taget1.txt']
+    paths.forEach(copyFile)
+    println "----copyFileTask  end-----"
+
+}
+
+tasks.getByName("copyFileTask") {
+    it.doLast {
+        println "$name: After assemble, jar libs are copied tolocal repository"
+//        copyOutput(true)  //copyOutput是utils.gradle输出的closure
+    }
+}
+task task1 << {
+    println 'compiling source #1'
+}
+
+task task2(dependsOn: task1) << {
+    println 'compiling unit tests #2'
+}
+
+task task3(dependsOn: [task1, task2]) << {
+    println 'running unit tests #3'
+}
+
+task task4(dependsOn: [task1, task3]) << {
+    println 'building the distribution #4'
+}
+// 必须在在使用 前申请
+println "author----------222"
+project.ext.bookPath = 'test.xml'
+apply from: rootProject.rootDir.getAbsolutePath() + "/script/utils.gradle"
+println "author----------333"
+
+// 测试 apply 方法
+task testApplyGradleFileTask {
+    println "getBookAuthor:  " + getBookAuthor
+}
+
+buildscript {
+    repositories {
+//        maven {
+//            url uri('../repo')
+////            url uri('file:D:/xxxxxx/repo')//nuwa插件库位置
+//        }
+    }
+
+    dependencies {
+        classpath fileTree(dir: 'libs', include: '*.jar') // 使用jar
+    }
+}
+apply plugin: 'hello'
+
+helloExt {
+    name = 'lanbing'
+    age = '15'
+}
+
+helloTask.doLast {
+    println '000000000000000000000000000000000'
+    println '000000000000000000000000000000000'
+}
+
+//clean.dependsOn(helloTask)
+
+
+task testCopyFileTask1111(dependsOn: helloTask) {
+//    println '-----------bing.bing------------'
+//    File bing = new File('wing.txt')
+//    if(!bing.exists()){
+//        println '-----------bucunzai------------'
+//        bing.mkdir()
+//    }else {
+//        println '-----------cunzai------------'
+//    }
+//    println '-----------bing.bing.bing------------'
 }

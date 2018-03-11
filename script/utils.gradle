@@ -1,0 +1,35 @@
+//utils.gradle中定义了一个获取AndroidManifests.xmlversionName的函数
+def getXmlBookAuthorName(String path) {
+//    下面这行代码中的project是谁？
+    println "path:----- " + path
+    if (path == null) {
+        return null
+    }
+    def targetFile = project.file(path)
+    def gpathResult = new XmlSlurper().parse(targetFile)
+
+//开始玩test.xml。现在我要访问id=4的book元素。
+//下面这种搞法，gpathResult代表根元素response。通过e1.e2.e3这种
+//格式就能访问到各级子元素....
+    def book4 = gpathResult.value.books.book[3]
+//得到book4的author元素
+    def author = book4.author
+    println "author: " + author
+
+    return author
+}
+
+//现在，想把这个API输出到各个Project。由于这个utils.gradle会被每一个Project Apply，所以
+//我可以把getVersionNameAdvanced定义成一个closure，然后赋值到一个外部属性
+//下面的ext是谁的ext？
+project.ext { //此段花括号中代码是闭包
+    //除了ext.xxx=value这种定义方法外，还可以使用ext{}这种书写方法。
+    //ext{}不是ext(Closure)对应的函数调用。但是ext{}中的{}确实是闭包。
+    println "author----------000  " + project.bookPath
+    getBookAuthor = getXmlBookAuthorName(project.bookPath)
+    println "author----------111"
+
+}
+
+// 这个脚本 写法不好 有很大问题
+

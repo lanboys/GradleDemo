@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.bing.lan.task.ATest" tests="1" skipped="0" failures="0" errors="0" timestamp="2018-03-11T04:49:02" hostname="DESKTOP-3ILAEHL" time="0.016">
+  <properties/>
+  <testcase name="gradleTest" classname="com.bing.lan.task.ATest" time="0.016"/>
+  <system-out><![CDATA[>>>Student>>>: name: xiaoming
+>>>Student>>>: age: 12
+Student(name=xiaoming, age=12)
+12
+xiaoming
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

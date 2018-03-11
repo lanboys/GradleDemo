@@ -9,7 +9,7 @@ open class MyLogger {
 
 
     //    伴生对象
-    companion object {
+    companion object LoggerTest{
         fun i(tag: String, info: String) {
             println(">>>$tag>>>: $info")
         }

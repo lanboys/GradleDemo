@@ -36,10 +36,6 @@
 //}
 
 
-dependencies {
-//    implementation project(":Model")
-}
-
 //隐式 it, 内部没用引用 it 可以传参数, 或者不传，引用了必须传参数
 //定义一个创建目录的闭包
 def createDir = {

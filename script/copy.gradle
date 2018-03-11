@@ -1,0 +1,19 @@
+project.ext.copyFile  = { srcFilePath, targetFilePath ->
+    try {
+        def srcFile = new File(srcFilePath)
+        def targetFile = new File(targetFilePath)
+        println '----' + srcFile.getAbsolutePath() + '----'
+        println '----' + targetFile.getAbsolutePath() + '----'
+        targetFile.withOutputStream { os ->
+            srcFile.withInputStream { ins ->
+                //利用OutputStream的<<操作符重载，完成从inputstream到OutputStream的输出
+                (os << ins)
+            }
+        }
+    } catch (Exception e) {
+
+    }
+}
+ 
+
+

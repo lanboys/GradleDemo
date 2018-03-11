@@ -1,0 +1,40 @@
+apply plugin: 'groovy'
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.11'
+
+    compile gradleApi()
+    compile localGroovy()
+}
+
+// 本地部署
+apply plugin: 'maven'
+uploadArchives {
+    repositories {
+        //同时 发布到自定义的目录 和 本地maven仓库 (~/.m2/repository)
+        mavenDeployer {
+            repository(url: uri('../MyRepo'))
+        }
+
+        //只发布到本地maven仓库 (~/.m2/repository)
+//        mavenLocal()
+    }
+}
+
+// 必须在在使用 前申请
+apply from: rootProject.rootDir.getAbsolutePath() + "/script/copy.gradle"
+
+def copyFile1() {
+    String srcJarFile = rootDir.getAbsolutePath() + "\\HelloPlugin\\build\\libs\\HelloPlugin-1.0-SNAPSHOT.jar"
+    String destJarFile = rootDir.getAbsolutePath() + "\\App\\libs\\HelloPlugin-1.0-SNAPSHOT.jar"
+    project.copyFile(srcJarFile, destJarFile)
+}
+
+task testCopyFileTask(dependsOn: jar) {
+    copyFile1()
+}
+
+jar.doLast {
+//jar << {
+    copyFile1()
+}
